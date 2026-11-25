@@ -18,6 +18,59 @@ diagram: docs/architecture.png
 
 Infrastructure (Docker): MySQL 8 (`localhost:3307`), Redis 7 (`localhost:6380`), Kafka in KRaft mode (`localhost:9092`), Kafka UI (`http://localhost:8090`).
 
+```mermaid
+flowchart LR
+    client["Client<br/>REST calls / scenario scripts"]
+
+    subgraph svc["Spring Boot microservices"]
+        slot["slot-service :8081<br/>H3 zones · slot capacity<br/>Redis Lua holds · hold sweeper"]
+        order["order-service :8082<br/>Saga orchestrator<br/>order + saga state"]
+        payment["payment-service :8083<br/>Gateway A → B fallback<br/>double-entry escrow ledger"]
+    end
+
+    kafka{{"Apache Kafka<br/>domain events + .DLT topics"}}
+
+    subgraph data["Data stores (one per service)"]
+        redis[("Redis<br/>slot counters · idempotency keys")]
+        slotdb[("MySQL<br/>slot_db")]
+        orderdb[("MySQL<br/>order_db")]
+        paydb[("MySQL<br/>payment_db")]
+    end
+
+    subgraph planned["Planned"]
+        gw["API Gateway"]
+        dispatch["dispatch-service<br/>H3 demand · riders needed"]
+        live["live-service<br/>WebSocket heatmap"]
+        web["React web app"]
+    end
+
+    client -->|REST| slot
+    client -->|REST| order
+    client -->|REST| payment
+
+    slot <-->|events| kafka
+    order <-->|events| kafka
+    payment <-->|events| kafka
+
+    slot --- redis
+    slot --- slotdb
+    order --- orderdb
+    payment --- paydb
+
+    web -.-> gw
+    kafka -.-> dispatch
+    kafka -.-> live
+
+    classDef core fill:#eef4ff,stroke:#2f6fdb,stroke-width:1.5px,color:#111;
+    classDef bus fill:#fff4e5,stroke:#e08a00,stroke-width:2px,color:#111;
+    classDef store fill:#f5f5f5,stroke:#777,color:#111;
+    classDef future fill:#ffffff,stroke:#aaa,stroke-dasharray:5 5,color:#777;
+    class slot,order,payment core;
+    class kafka bus;
+    class redis,slotdb,orderdb,paydb store;
+    class gw,dispatch,live,web future;
+```
+
 ## How it works
 
 1. **Find slots** — `GET /api/slots?lat&lng&date`: slot-service maps the location to an H3 resolution-9 cell and returns that cell's 1-hour slots (08:00–22:00) with remaining capacity and a `GREEN` / `NORMAL` / `BUSY` price tag.
