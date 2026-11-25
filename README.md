@@ -18,54 +18,7 @@ diagram: docs/architecture.png
 
 Infrastructure (Docker): MySQL 8, Redis 7, Kafka in KRaft mode , Kafka UI .
 
-```mermaid
-flowchart LR
-    client["Client<br/>REST calls / scenario scripts"]
-
-    subgraph svc["Spring Boot microservices"]
-        slot["slot-service :8081<br/>H3 zones · slot capacity<br/>Redis Lua holds · hold sweeper"]
-        order["order-service :8082<br/>Saga orchestrator<br/>order + saga state"]
-        payment["payment-service :8083<br/>Gateway A → B fallback<br/>double-entry escrow ledger"]
-    end
-
-    kafka{{"Apache Kafka<br/>domain events + .DLT topics"}}
-
-    subgraph data["Data stores (one per service)"]
-        redis[("Redis<br/>slot counters · idempotency keys")]
-        slotdb[("MySQL<br/>slot_db")]
-        orderdb[("MySQL<br/>order_db")]
-        paydb[("MySQL<br/>payment_db")]
-    end
-
-    subgraph planned["Planned"]
-        gw["API Gateway"]
-        dispatch["dispatch-service<br/>H3 demand · riders needed"]
-        live["live-service<br/>WebSocket heatmap"]
-        web["React web app"]
-    end
-
-    client -->|REST| slot
-    client -->|REST| order
-    client -->|REST| payment
-
-    slot <-->|events| kafka
-    order <-->|events| kafka
-    payment <-->|events| kafka
-
-    slot --- redis
-    slot --- slotdb
-    order --- orderdb
-    payment --- paydb
-
-    web -.-> gw
-    kafka -.-> dispatch
-    kafka -.-> live
-
-    class slot,order,payment core;
-    class kafka bus;
-    class redis,slotdb,orderdb,paydb store;
-    class gw,dispatch,live,web future;
-```
+![SlotSure architecture](docs/architecture.png)
 
 ## How it works
 
