@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1210" viewBox="0 0 1700 1210" font-family="Inter, DejaVu Sans, sans-serif">
+<defs>
+<filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.10"/></filter>
+<marker id="ae" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#334155"/></marker>
+<marker id="as" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10 0 L0 5 L10 10 Z" fill="#334155"/></marker>
+<marker id="aeg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#9CA3AF"/></marker>
+<marker id="asg" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10 0 L0 5 L10 10 Z" fill="#9CA3AF"/></marker>
+</defs>
+<rect width="1700" height="1210" fill="#FFFFFF"/>
+<text x="40" y="58" font-size="30" font-weight="800" fill="#0F172A">SlotSure — System Architecture</text>
+<text x="40" y="88" font-size="15.5" fill="#64748B">Event-driven delivery-slot booking · Saga orchestration · zero overbooking under concurrency</text>
+<rect x="470" y="120" width="1190" height="800" rx="16" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5"/>
+<rect x="470" y="120" width="300" height="34" rx="16" fill="#0F172A"/><rect x="470" y="137" width="300" height="17" fill="#0F172A"/>
+<text x="490" y="143" font-size="14" font-weight="700" fill="#fff">SlotSure platform · Docker Compose</text>
+<text x="520" y="185" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="#94A3B8">DATA LAYER — database per service</text>
+<text x="1105" y="345" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="#94A3B8">SPRING BOOT MICROSERVICES</text>
+<text x="520" y="660" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="#94A3B8">EVENT BACKBONE</text>
+<text x="520" y="805" font-size="11.5" font-weight="700" letter-spacing="1.2" fill="#94A3B8">ROADMAP (planned)</text>
+<rect x="520" y="200" width="160" height="100" rx="10" fill="#FFFFFF" stroke="#DC2626" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="534" y="214" width="52" height="52" rx="9" fill="#DC2626"/>
+<path d="M564 222 L549 243 H559 L555 258 L571 236 H561 Z" fill="#fff"/>
+<text x="600" y="238" font-size="18" font-weight="700" fill="#111827">Redis</text>
+<text x="600" y="258" font-size="12.5" font-weight="600" fill="#DC2626">counters</text>
+<rect x="700" y="200" width="160" height="100" rx="10" fill="#FFFFFF" stroke="#0E7490" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="714" y="214" width="52" height="52" rx="9" fill="#0E7490"/>
+<ellipse cx="740" cy="229" rx="14" ry="5" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M726 229 V251 A14 5 0 0 0 754 251 V229" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M726 240 A14 5 0 0 0 754 240" fill="none" stroke="#fff" stroke-width="2.5"/>
+<text x="780" y="238" font-size="18" font-weight="700" fill="#111827">MySQL</text>
+<text x="780" y="258" font-size="12.5" font-weight="600" fill="#0E7490">slot_db</text>
+<rect x="990" y="200" width="170" height="100" rx="10" fill="#FFFFFF" stroke="#0E7490" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="1004" y="214" width="52" height="52" rx="9" fill="#0E7490"/>
+<ellipse cx="1030" cy="229" rx="14" ry="5" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M1016 229 V251 A14 5 0 0 0 1044 251 V229" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M1016 240 A14 5 0 0 0 1044 240" fill="none" stroke="#fff" stroke-width="2.5"/>
+<text x="1070" y="238" font-size="18" font-weight="700" fill="#111827">MySQL</text>
+<text x="1070" y="258" font-size="12.5" font-weight="600" fill="#0E7490">order_db</text>
+<rect x="1380" y="200" width="170" height="100" rx="10" fill="#FFFFFF" stroke="#0E7490" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="1394" y="214" width="52" height="52" rx="9" fill="#0E7490"/>
+<ellipse cx="1420" cy="229" rx="14" ry="5" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M1406 229 V251 A14 5 0 0 0 1434 251 V229" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M1406 240 A14 5 0 0 0 1434 240" fill="none" stroke="#fff" stroke-width="2.5"/>
+<text x="1460" y="238" font-size="18" font-weight="700" fill="#111827">MySQL</text>
+<text x="1460" y="258" font-size="12.5" font-weight="600" fill="#0E7490">payment_db</text>
+<text x="536" y="288" font-size="13" fill="#4B5563">Lua: atomic hold</text>
+<text x="716" y="288" font-size="13" fill="#4B5563">slots · holds</text>
+<text x="1006" y="288" font-size="13" fill="#4B5563">orders · saga state</text>
+<text x="1396" y="288" font-size="13" fill="#4B5563">payments · ledger</text>
+<rect x="520" y="360" width="340" height="170" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="534" y="374" width="52" height="52" rx="9" fill="#2563EB"/>
+<path d="M560 383 L575 391.5 V408.5 L560 417 L545 408.5 V391.5 Z" fill="none" stroke="#fff" stroke-width="2.5"/>
+<text x="600" y="398" font-size="18" font-weight="700" fill="#111827">slot-service</text>
+<text x="600" y="418" font-size="12.5" font-weight="600" fill="#2563EB">:8081 · capacity &amp; holds</text>
+<text x="536" y="450" font-size="13.5" fill="#4B5563">H3 hexagon zones (res 9 count / res 8 plan)</text>
+<text x="536" y="470" font-size="13.5" fill="#4B5563">Redis Lua check-and-decrement</text>
+<text x="536" y="490" font-size="13.5" fill="#4B5563">Idempotency-Key · hold expiry sweeper</text>
+<rect x="940" y="360" width="330" height="170" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="954" y="374" width="52" height="52" rx="9" fill="#2563EB"/>
+<path d="M980 384 L996 392 L996 410 L980 418 L964 410 L964 392 Z" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/><path d="M964 392 L980 400 L996 392 M980 400 L980 418" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="1020" y="398" font-size="18" font-weight="700" fill="#111827">order-service</text>
+<text x="1020" y="418" font-size="12.5" font-weight="600" fill="#2563EB">:8082 · orchestrator</text>
+<text x="956" y="450" font-size="13.5" fill="#4B5563">Saga orchestrator (state machine)</text>
+<text x="956" y="470" font-size="13.5" fill="#4B5563">Compensation on failure</text>
+<text x="956" y="490" font-size="13.5" fill="#4B5563">processed_events dedupe</text>
+<rect x="1330" y="360" width="300" height="170" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="1344" y="374" width="52" height="52" rx="9" fill="#2563EB"/>
+<path d="M1370 384 L1386 392 L1386 410 L1370 418 L1354 410 L1354 392 Z" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/><path d="M1354 392 L1370 400 L1386 392 M1370 400 L1370 418" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="1410" y="398" font-size="18" font-weight="700" fill="#111827">payment-service</text>
+<text x="1410" y="418" font-size="12.5" font-weight="600" fill="#2563EB">:8083 · escrow</text>
+<text x="1346" y="450" font-size="13.5" fill="#4B5563">Strategy: Gateway A → B fallback</text>
+<text x="1346" y="470" font-size="13.5" fill="#4B5563">Double-entry escrow ledger</text>
+<text x="1346" y="490" font-size="13.5" fill="#4B5563">Kafka-only, no public writes</text>
+<path d="M600 360 L600 302" fill="none" stroke="#334155" stroke-width="2" marker-start="url(#as)" marker-end="url(#ae)"/>
+<path d="M780 360 L780 302" fill="none" stroke="#334155" stroke-width="2" marker-start="url(#as)" marker-end="url(#ae)"/>
+<path d="M1075 360 L1075 302" fill="none" stroke="#334155" stroke-width="2" marker-start="url(#as)" marker-end="url(#ae)"/>
+<path d="M1465 360 L1465 302" fill="none" stroke="#334155" stroke-width="2" marker-start="url(#as)" marker-end="url(#ae)"/>
+<rect x="520" y="675" width="1110" height="100" rx="10" fill="#FFF7ED" stroke="#EA580C" stroke-width="1.8" filter="url(#sh)"/>
+<rect x="534" y="699" width="52" height="52" rx="9" fill="#EA580C"/>
+<path d="M544 715 H572 M567 711 L573 715 L567 719" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M544 725 H572 M567 721 L573 725 L567 729" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M544 735 H572 M567 731 L573 735 L567 739" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="600" y="717" font-size="18" font-weight="700" fill="#111827">Apache Kafka</text>
+<text x="600" y="737" font-size="12.5" font-weight="600" fill="#EA580C">KRaft · JSON event envelope · keyed by orderId · retry 2x → .DLT</text>
+<text x="600" y="758" font-size="12.5" fill="#4B5563">payment.requested · payment.captured · payment.failed · slot.confirm · slot.confirmed · slot.release · refund.*</text>
+<rect x="30" y="420" width="190" height="140" rx="10" fill="#FFFFFF" stroke="#475569" stroke-width="1.6" filter="url(#sh)"/>
+<rect x="44" y="434" width="52" height="52" rx="9" fill="#475569"/>
+<circle cx="70" cy="453" r="7" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M56 477 C56 465 84 465 84 477" fill="none" stroke="#fff" stroke-width="2.5"/>
+<text x="110" y="458" font-size="18" font-weight="700" fill="#111827">Customer</text>
+<text x="110" y="478" font-size="12.5" font-weight="600" fill="#475569">today</text>
+<text x="46" y="510" font-size="13.5" fill="#4B5563">REST client /</text>
+<text x="46" y="530" font-size="13.5" fill="#4B5563">scenario scripts</text>
+<rect x="30" y="610" width="190" height="140" rx="10" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.6" stroke-dasharray="7 5" filter=""/>
+<rect x="44" y="624" width="52" height="52" rx="9" fill="#9CA3AF"/>
+<rect x="53" y="636" width="34" height="23" rx="2" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M64 666 H76 M70 659 V666" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+<text x="110" y="648" font-size="18" font-weight="700" fill="#6B7280">React app</text>
+<text x="110" y="668" font-size="12.5" font-weight="600" fill="#9CA3AF">planned</text>
+<text x="46" y="700" font-size="13.5" fill="#9CA3AF">Vite · Leaflet · h3-js</text>
+<text x="46" y="720" font-size="13.5" fill="#9CA3AF">live heatmap</text>
+<rect x="250" y="420" width="200" height="140" rx="10" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.6" stroke-dasharray="7 5" filter=""/>
+<rect x="264" y="434" width="52" height="52" rx="9" fill="#9CA3AF"/>
+<rect x="276" y="444" width="28" height="34" rx="3" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M268 461 H294 M288 455 L294 461 L288 467" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="330" y="458" font-size="18" font-weight="700" fill="#6B7280">API Gateway</text>
+<text x="330" y="478" font-size="12.5" font-weight="600" fill="#9CA3AF">planned</text>
+<text x="266" y="510" font-size="13.5" fill="#9CA3AF">Spring Cloud</text>
+<text x="266" y="530" font-size="13.5" fill="#9CA3AF">Gateway · auth</text>
+<path d="M125 610 L125 562" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#aeg)"/>
+<text x="158" y="592" font-size="12.5" font-weight="600" fill="#9CA3AF" text-anchor="middle">UI</text>
+<path d="M220 490 L248 490" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#aeg)"/>
+<path d="M200 562 L200 595 L1440 595" fill="none" stroke="#334155" stroke-width="2.2"/>
+<path d="M560 595 L560 532" fill="none" stroke="#334155" stroke-width="2.2" marker-end="url(#ae)"/>
+<path d="M980 595 L980 532" fill="none" stroke="#334155" stroke-width="2.2" marker-end="url(#ae)"/>
+<path d="M1440 595 L1440 532" fill="none" stroke="#334155" stroke-width="2.2" marker-end="url(#ae)"/>
+<rect x="233.0" y="574" width="194.00000000000003" height="20" rx="4" fill="#F8FAFC"/>
+<text x="330" y="588" font-size="12.5" font-weight="600" fill="#334155" text-anchor="middle">REST /api/* (direct today)</text>
+<circle cx="560" cy="615" r="13" fill="#111827"/><text x="560" y="619.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<rect x="600.5" y="606" width="89.00000000000001" height="20" rx="4" fill="#F8FAFC"/>
+<text x="645" y="620" font-size="12.5" font-weight="600" fill="#334155" text-anchor="middle">POST /holds</text>
+<circle cx="980" cy="615" r="13" fill="#111827"/><text x="980" y="619.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<rect x="1022.0" y="606" width="96.00000000000001" height="20" rx="4" fill="#F8FAFC"/>
+<text x="1070" y="620" font-size="12.5" font-weight="600" fill="#334155" text-anchor="middle">POST /orders</text>
+<rect x="1273.5" y="606" width="173.00000000000003" height="20" rx="4" fill="#F8FAFC"/>
+<text x="1360" y="620" font-size="12.5" font-weight="600" fill="#334155" text-anchor="middle">GET /payments · /ledger</text>
+<path d="M830 532 L830 673" fill="none" stroke="#F8FAFC" stroke-width="9"/>
+<path d="M830 532 L830 673" fill="none" stroke="#334155" stroke-width="2.2" marker-start="url(#as)" marker-end="url(#ae)"/>
+<path d="M1200 532 L1200 673" fill="none" stroke="#F8FAFC" stroke-width="9"/>
+<path d="M1200 532 L1200 673" fill="none" stroke="#334155" stroke-width="2.2" marker-start="url(#as)" marker-end="url(#ae)"/>
+<path d="M1560 532 L1560 673" fill="none" stroke="#334155" stroke-width="2.2" marker-start="url(#as)" marker-end="url(#ae)"/>
+<circle cx="1560" cy="560" r="13" fill="#EA580C"/><text x="1560" y="564.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<circle cx="1200" cy="650" r="13" fill="#EA580C"/><text x="1200" y="654.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<circle cx="830" cy="650" r="13" fill="#EA580C"/><text x="830" y="654.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+<rect x="520" y="820" width="340" height="80" rx="10" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.6" stroke-dasharray="7 5" filter=""/>
+<rect x="534" y="834" width="52" height="52" rx="9" fill="#9CA3AF"/>
+<path d="M545 874 H575 M549 870 V862 M557 870 V854 M565 870 V858 M573 870 V847" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<text x="600" y="858" font-size="18" font-weight="700" fill="#6B7280">dispatch-service</text>
+<text x="600" y="878" font-size="12.5" font-weight="600" fill="#9CA3AF">H3 demand → riders needed per zone</text>
+<rect x="940" y="820" width="330" height="80" rx="10" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.6" stroke-dasharray="7 5" filter=""/>
+<rect x="954" y="834" width="52" height="52" rx="9" fill="#9CA3AF"/>
+<path d="M968 854 A14 14 0 0 1 992 854 M973 860 A8 8 0 0 1 987 860" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><circle cx="980" cy="868" r="3.5" fill="#fff"/>
+<text x="1020" y="858" font-size="18" font-weight="700" fill="#6B7280">live-service</text>
+<text x="1020" y="878" font-size="12.5" font-weight="600" fill="#9CA3AF">WebSocket / STOMP live tracking</text>
+<rect x="1330" y="820" width="300" height="80" rx="10" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.6" stroke-dasharray="7 5" filter=""/>
+<rect x="1344" y="834" width="52" height="52" rx="9" fill="#9CA3AF"/>
+<path d="M1355 874 H1385 M1359 870 V862 M1367 870 V854 M1375 870 V858 M1383 870 V847" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<text x="1410" y="858" font-size="18" font-weight="700" fill="#6B7280">Observability</text>
+<text x="1410" y="878" font-size="12.5" font-weight="600" fill="#9CA3AF">Prometheus · Grafana · k6</text>
+<path d="M690 775 L690 818" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#aeg)"/>
+<path d="M1105 775 L1105 818" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#aeg)"/>
+<path d="M940 880 L900 880 L900 945 L125 945 L125 752" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#aeg)"/>
+<rect x="420.0" y="936" width="180.00000000000003" height="20" rx="4" fill="#F8FAFC"/>
+<text x="510" y="950" font-size="12.5" font-weight="600" fill="#9CA3AF" text-anchor="middle">live updates (WebSocket)</text>
+<text x="40" y="1000" font-size="16" font-weight="800" fill="#0F172A">Booking flow</text>
+<circle cx="54" cy="1035" r="13" fill="#111827"/><text x="54" y="1039.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<text x="78" y="1040" font-size="14.5" fill="#334155">Customer holds a slot — Redis Lua decrements only if capacity &gt; 0, so it never overbooks</text>
+<circle cx="54" cy="1077" r="13" fill="#111827"/><text x="54" y="1081.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<text x="78" y="1082" font-size="14.5" fill="#334155">Order created — the saga starts and publishes payment.requested</text>
+<circle cx="54" cy="1119" r="13" fill="#EA580C"/><text x="54" y="1123.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<text x="78" y="1124" font-size="14.5" fill="#334155">payment-service charges via gateway A, falls back to B, and records an escrow ledger entry</text>
+<circle cx="874" cy="1035" r="13" fill="#EA580C"/><text x="874" y="1039.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<text x="898" y="1040" font-size="14.5" fill="#334155">payment.captured → order sends slot.confirm → slot.confirmed → order CONFIRMED</text>
+<circle cx="874" cy="1077" r="13" fill="#EA580C"/><text x="874" y="1081.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+<text x="898" y="1082" font-size="14.5" fill="#334155">payment.failed → compensation: slot.release returns capacity +1 → order FAILED</text>
+<circle cx="874" cy="1119" r="13" fill="#475569"/><path d="M874 1113 V1119 L879 1122" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<text x="898" y="1124" font-size="14.5" fill="#334155">Unpaid holds expire after 5 minutes — a scheduled sweeper releases them</text>
+<rect x="1270" y="40" width="390" height="60" rx="8" fill="#fff" stroke="#E2E8F0"/>
+<path d="M1288 62 H1328" stroke="#334155" stroke-width="2" marker-end="url(#ae)"/><text x="1336" y="66" font-size="12.5" fill="#475569">built</text>
+<path d="M1390 62 H1430" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#aeg)"/><text x="1438" y="66" font-size="12.5" fill="#475569">planned</text>
+<rect x="1508" y="54" width="16" height="16" rx="3" fill="#2563EB"/><text x="1530" y="66" font-size="12.5" fill="#475569">service</text>
+<rect x="1288" y="76" width="16" height="16" rx="3" fill="#0E7490"/><text x="1310" y="88" font-size="12.5" fill="#475569">MySQL</text>
+<rect x="1370" y="76" width="16" height="16" rx="3" fill="#DC2626"/><text x="1392" y="88" font-size="12.5" fill="#475569">Redis</text>
+<rect x="1450" y="76" width="16" height="16" rx="3" fill="#EA580C"/><text x="1472" y="88" font-size="12.5" fill="#475569">Kafka · async</text>
+</svg>

@@ -8,7 +8,6 @@ Delivery slots are a scarce, time-boxed resource. When many customers in the sam
 
 ## Architecture
 
-diagram: docs/architecture.png
 
 | Service | Port | Owns |
 | --- | --- | --- |
@@ -18,7 +17,7 @@ diagram: docs/architecture.png
 
 Infrastructure (Docker): MySQL 8, Redis 7, Kafka in KRaft mode , Kafka UI .
 
-![SlotSure architecture](docs/architecture.png)
+![SlotSure architecture](docs/architecture.svg)
 
 ## How it works
 
