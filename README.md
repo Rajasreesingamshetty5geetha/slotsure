@@ -16,7 +16,7 @@ diagram: docs/architecture.png
 | order-service | 8082 | orders and the saga orchestrator |
 | payment-service | 8083 | payment gateways, payment attempts, double-entry ledger |
 
-Infrastructure (Docker): MySQL 8 (`localhost:3307`), Redis 7 (`localhost:6380`), Kafka in KRaft mode (`localhost:9092`), Kafka UI (`http://localhost:8090`).
+Infrastructure (Docker): MySQL 8, Redis 7, Kafka in KRaft mode , Kafka UI .
 
 ```mermaid
 flowchart LR
