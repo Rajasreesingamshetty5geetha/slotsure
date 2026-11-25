@@ -61,10 +61,6 @@ flowchart LR
     kafka -.-> dispatch
     kafka -.-> live
 
-    classDef core fill:#eef4ff,stroke:#2f6fdb,stroke-width:1.5px,color:#111;
-    classDef bus fill:#fff4e5,stroke:#e08a00,stroke-width:2px,color:#111;
-    classDef store fill:#f5f5f5,stroke:#777,color:#111;
-    classDef future fill:#ffffff,stroke:#aaa,stroke-dasharray:5 5,color:#777;
     class slot,order,payment core;
     class kafka bus;
     class redis,slotdb,orderdb,paydb store;
