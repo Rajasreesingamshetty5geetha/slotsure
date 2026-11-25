@@ -1,0 +1,52 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: payment-service
+  datasource:
+    url: jdbc:mysql://localhost:3307/payment_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: slotsure
+    password: slotsure
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  jackson:
+    deserialization:
+      use-big-decimal-for-floats: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+    consumer:
+      group-id: payment-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+
+slotsure:
+  topics:
+    payment-requested: payment.requested
+    payment-captured: payment.captured
+    payment-failed: payment.failed
+    refund-requested: refund.requested
+    refund-completed: refund.completed
+  kafka:
+    retry-interval-ms: 1000
+    retry-attempts: 2
+  gateway:
+    order: A,B
+    a:
+      failure-rate: 0.2
+      latency-ms: 200
+    b:
+      failure-rate: 0.1
+      latency-ms: 400

@@ -1,0 +1,52 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: slot-service
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  datasource:
+    url: jdbc:mysql://localhost:3307/slot_db?serverTimezone=UTC
+    username: slotsure
+    password: slotsure
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  data:
+    redis:
+      host: localhost
+      port: 6380
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+    consumer:
+      group-id: slot-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+
+slotsure:
+  slot:
+    capacity: 10
+    first-hour: 8
+    last-hour: 22
+  hold:
+    expiry-seconds: 300
+    idempotency-ttl-hours: 24
+    sweep-interval-ms: 30000
+  topics:
+    slot-confirm: slot.confirm
+    slot-release: slot.release
+    slot-confirmed: slot.confirmed
+    slot-confirm-failed: slot.confirm.failed
+    slot-released: slot.released

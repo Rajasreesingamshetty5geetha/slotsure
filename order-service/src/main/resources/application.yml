@@ -1,0 +1,47 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: order-service
+  datasource:
+    url: jdbc:mysql://localhost:3307/order_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: slotsure
+    password: slotsure
+  jpa:
+    hibernate:
+      ddl-auto: update   # tonight only; replace with schema migrations later
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+    consumer:
+      group-id: order-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+slotsure:
+  kafka:
+    retry-interval-ms: 1000
+    retry-attempts: 2
+  topics:
+    payment-requested: payment.requested
+    payment-captured: payment.captured
+    payment-failed: payment.failed
+    slot-confirm: slot.confirm
+    slot-release: slot.release
+    slot-confirmed: slot.confirmed
+    slot-confirm-failed: slot.confirm.failed
+    refund-requested: refund.requested
+    refund-completed: refund.completed

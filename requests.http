@@ -1,0 +1,122 @@
+### SlotSure — happy path (IntelliJ HTTP Client)
+# Run the requests top to bottom. Each response handler stores values
+# (slotId, holdId, orderId, Idempotency-Keys) in client.global for the next request.
+
+@slotHost = http://localhost:8081
+@orderHost = http://localhost:8082
+@paymentHost = http://localhost:8083
+@customerId = 7f3c2a10-4b5e-4c8d-9a1f-2e6b8d0c4a11
+@lat = 12.9716
+@lng = 77.5946
+
+### 1. Get slots for Bengaluru (MG Road area) for tomorrow
+< {%
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    const pad = n => (n < 10 ? "0" : "") + n;
+    request.variables.set("tomorrow", d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()));
+%}
+GET {{slotHost}}/api/slots?lat={{lat}}&lng={{lng}}&date={{tomorrow}}
+Accept: application/json
+
+> {%
+    client.test("slots returned", () => {
+        client.assert(response.status === 200, "expected 200, got " + response.status);
+        client.assert(response.body.length > 0, "expected at least one slot");
+    });
+    client.global.set("slotId", response.body[0].slotId);
+    // One key per run, reused by request 3 to prove the hold is idempotent
+    client.global.set("holdKey", "hold-" + Date.now());
+    client.global.set("orderKey", "order-" + Date.now());
+%}
+
+### 2. Create a hold on the first slot
+POST {{slotHost}}/api/holds
+Content-Type: application/json
+Idempotency-Key: {{holdKey}}
+
+{
+  "slotId": "{{slotId}}",
+  "customerId": "{{customerId}}"
+}
+
+> {%
+    client.test("hold created", () => {
+        client.assert(response.status === 201, "expected 201, got " + response.status);
+        client.assert(response.body.holdId, "holdId missing");
+    });
+    client.global.set("holdId", response.body.holdId);
+%}
+
+### 3. Repeat the same hold request (same Idempotency-Key) — must return the same holdId
+POST {{slotHost}}/api/holds
+Content-Type: application/json
+Idempotency-Key: {{holdKey}}
+
+{
+  "slotId": "{{slotId}}",
+  "customerId": "{{customerId}}"
+}
+
+> {%
+    client.test("same hold returned, no second seat taken", () => {
+        client.assert(response.status === 200 || response.status === 201, "unexpected status " + response.status);
+        client.assert(response.body.holdId === client.global.get("holdId"),
+            "expected holdId " + client.global.get("holdId") + ", got " + response.body.holdId);
+    });
+%}
+
+### 4. Create an order for the hold
+POST {{orderHost}}/api/orders
+Content-Type: application/json
+Idempotency-Key: {{orderKey}}
+
+{
+  "customerId": "{{customerId}}",
+  "holdId": "{{holdId}}",
+  "amount": 499.00
+}
+
+> {%
+    client.test("order created as PENDING", () => {
+        client.assert(response.status === 201, "expected 201, got " + response.status);
+        client.assert(response.body.status === "PENDING", "expected PENDING, got " + response.body.status);
+    });
+    client.global.set("orderId", response.body.orderId);
+%}
+
+### 5. Get the order (run again after a few seconds to see CONFIRMED / DONE)
+GET {{orderHost}}/api/orders/{{orderId}}
+Accept: application/json
+
+> {%
+    client.test("order found", () => {
+        client.assert(response.status === 200, "expected 200, got " + response.status);
+    });
+    client.log("status=" + response.body.status + " sagaStep=" + response.body.sagaStep);
+%}
+
+### 6. Get payment attempts for the order
+GET {{paymentHost}}/api/payments/{{orderId}}
+Accept: application/json
+
+> {%
+    client.test("payments returned", () => {
+        client.assert(response.status === 200, "expected 200, got " + response.status);
+    });
+%}
+
+### 7. Ledger entries for the order
+GET {{paymentHost}}/api/ledger/{{orderId}}
+Accept: application/json
+
+### 8. Ledger check — debits must equal credits
+GET {{paymentHost}}/api/ledger/check
+Accept: application/json
+
+> {%
+    client.test("ledger balanced", () => {
+        client.assert(response.status === 200, "expected 200, got " + response.status);
+        client.assert(Number(response.body.difference) === 0, "difference is " + response.body.difference);
+    });
+%}
