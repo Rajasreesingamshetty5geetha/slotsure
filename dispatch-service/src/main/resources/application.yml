@@ -1,0 +1,52 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: dispatch-service
+  datasource:
+    url: jdbc:mysql://localhost:3307/dispatch_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: slotsure
+    password: slotsure
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      # Other services may add payload fields at any time (CONTRACT V2.5).
+      fail-on-unknown-properties: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+    consumer:
+      group-id: dispatch-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+
+slotsure:
+  zone: Asia/Kolkata
+  dispatch:
+    max-deliveries-per-agent-per-hour: 6
+  kafka:
+    retry-interval-ms: 1000
+    retry-attempts: 2
+  topics:
+    slot-confirmed: slot.confirmed
+    delivery-assigned: delivery.assigned
+    delivery-completed: delivery.completed
+  demo-data:
+    enabled: true
+    # Must match order-service, so demo assignments belong to its demo orders.
+    min-bookings-per-day: 40
+    max-bookings-per-day: 80

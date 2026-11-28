@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 /**
  * Thin Kafka adapter: parses the envelope and payload, then hands over to SagaService.
  * Any exception goes to the DefaultErrorHandler (2 retries, then topic.DLT).
+ * Unknown JSON fields are ignored (spring.jackson.deserialization.fail-on-unknown-properties: false).
  */
 @Slf4j
 @Component
@@ -53,6 +54,18 @@ public class SagaEventListener {
     public void onRefundCompleted(String message) {
         EventEnvelope<JsonNode> envelope = parse(message);
         sagaService.onRefundCompleted(envelope.eventId(), payload(envelope, RefundCompletedPayload.class));
+    }
+
+    @KafkaListener(topics = "${slotsure.topics.delivery-assigned}")
+    public void onDeliveryAssigned(String message) {
+        EventEnvelope<JsonNode> envelope = parse(message);
+        sagaService.onDeliveryAssigned(envelope.eventId(), payload(envelope, DeliveryAssignedPayload.class));
+    }
+
+    @KafkaListener(topics = "${slotsure.topics.delivery-completed}")
+    public void onDeliveryCompleted(String message) {
+        EventEnvelope<JsonNode> envelope = parse(message);
+        sagaService.onDeliveryCompleted(envelope.eventId(), payload(envelope, DeliveryCompletedPayload.class));
     }
 
     private EventEnvelope<JsonNode> parse(String message) {

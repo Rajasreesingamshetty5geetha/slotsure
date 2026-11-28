@@ -12,19 +12,29 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
- * One call to one gateway for one order. Every call is stored, successful or not.
+ * One money movement attempt for one order: a gateway call, the checkout capture of a PREPAID order,
+ * or the cash taken on delivery. Every attempt is stored, successful or not.
+ * The status is stored as VARCHAR, not MySQL ENUM, so new values never need a column change.
  */
 @Entity
-@Table(name = "payment_attempts", indexes = @Index(name = "idx_payment_attempts_order", columnList = "order_id"))
+@Table(name = "payment_attempts", indexes = {
+        @Index(name = "idx_payment_attempts_order", columnList = "order_id"),
+        @Index(name = "idx_payment_attempts_created", columnList = "created_at")
+})
 @Getter
 @Setter
 @Builder
 public class PaymentAttempt {
+
+    public static final String CHECKOUT = "CHECKOUT";
+    public static final String COD = "COD";
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -44,7 +54,8 @@ public class PaymentAttempt {
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(nullable = false, length = 16)
     private PaymentStatus status;
 
     @Column(name = "failure_reason", length = 500)
@@ -53,11 +64,15 @@ public class PaymentAttempt {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    /** True for seeded dummy rows, so they can be wiped. */
+    @Column(nullable = false)
+    private boolean demo;
+
     protected PaymentAttempt() {
     }
 
     private PaymentAttempt(String id, String orderId, String customerId, String gateway, BigDecimal amount,
-                           PaymentStatus status, String failureReason, Instant createdAt) {
+                           PaymentStatus status, String failureReason, Instant createdAt, boolean demo) {
         this.id = id;
         this.orderId = orderId;
         this.customerId = customerId;
@@ -66,5 +81,6 @@ public class PaymentAttempt {
         this.status = status;
         this.failureReason = failureReason;
         this.createdAt = createdAt;
+        this.demo = demo;
     }
 }

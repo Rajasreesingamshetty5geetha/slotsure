@@ -9,13 +9,16 @@ import com.slotsure.payment.repository.PaymentAttemptRepository;
 import com.slotsure.payment.repository.ProcessedEventRepository;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -48,6 +51,34 @@ class InMemoryStore {
                         .findFirst());
         when(paymentAttemptRepository.findByOrderIdOrderByCreatedAtAsc(anyString()))
                 .thenAnswer(inv -> attempts.stream().filter(a -> a.getOrderId().equals(inv.getArgument(0))).toList());
+        when(paymentAttemptRepository.findFirstByOrderIdAndStatusIn(anyString(), anyCollection()))
+                .thenAnswer(inv -> attempts.stream()
+                        .filter(a -> a.getOrderId().equals(inv.getArgument(0))
+                                && ((Collection<PaymentStatus>) inv.getArgument(1)).contains(a.getStatus()))
+                        .findFirst());
+        when(paymentAttemptRepository.existsByDemoTrueAndOrderIdIn(anyCollection()))
+                .thenAnswer(inv -> attempts.stream().anyMatch(a -> a.isDemo()
+                        && ((Collection<String>) inv.getArgument(0)).contains(a.getOrderId())));
+        when(paymentAttemptRepository.sumAmount(anyCollection(), any(Instant.class), any(Instant.class)))
+                .thenAnswer(inv -> attempts.stream()
+                        .filter(a -> ((Collection<PaymentStatus>) inv.getArgument(0)).contains(a.getStatus())
+                                && within(a.getCreatedAt(), inv.getArgument(1), inv.getArgument(2)))
+                        .map(PaymentAttempt::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add));
+
+        when(ledgerEntryRepository.sumDebitOn(anyString(), any(Instant.class), any(Instant.class)))
+                .thenAnswer(inv -> ledger.stream()
+                        .filter(e -> e.getAccount().equals(inv.getArgument(0))
+                                && within(e.getCreatedAt(), inv.getArgument(1), inv.getArgument(2)))
+                        .map(LedgerEntry::getDebit).reduce(BigDecimal.ZERO, BigDecimal::add));
+        when(ledgerEntryRepository.sumCreditOnPrefix(anyString(), any(Instant.class), any(Instant.class)))
+                .thenAnswer(inv -> ledger.stream()
+                        .filter(e -> e.getAccount().startsWith(inv.getArgument(0))
+                                && within(e.getCreatedAt(), inv.getArgument(1), inv.getArgument(2)))
+                        .map(LedgerEntry::getCredit).reduce(BigDecimal.ZERO, BigDecimal::add));
+        when(ledgerEntryRepository.balanceBefore(anyString(), any(Instant.class)))
+                .thenAnswer(inv -> ledger.stream()
+                        .filter(e -> e.getAccount().equals(inv.getArgument(0)) && e.getCreatedAt().isBefore(inv.getArgument(1)))
+                        .map(e -> e.getCredit().subtract(e.getDebit())).reduce(BigDecimal.ZERO, BigDecimal::add));
 
         when(ledgerEntryRepository.saveAll(anyIterable())).thenAnswer(inv -> {
             List<LedgerEntry> rows = new ArrayList<>();
@@ -72,6 +103,15 @@ class InMemoryStore {
             }
             return e;
         });
+    }
+
+    BigDecimal balance(String account) {
+        return ledger.stream().filter(e -> e.getAccount().equals(account))
+                .map(e -> e.getCredit().subtract(e.getDebit())).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private static boolean within(Instant at, Instant from, Instant to) {
+        return !at.isBefore(from) && at.isBefore(to);
     }
 
     long ledgerTransactions() {

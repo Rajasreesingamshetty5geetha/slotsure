@@ -28,6 +28,12 @@ public class LedgerService {
 
     @Transactional
     public void post(String txnId, String orderId, List<LedgerLine> entries) {
+        post(txnId, orderId, entries, Instant.now(), false);
+    }
+
+    /** createdAt and demo are only set by the demo seeder, which writes yesterday's history. */
+    @Transactional
+    public void post(String txnId, String orderId, List<LedgerLine> entries, Instant createdAt, boolean demo) {
         if (entries == null || entries.size() < 2) {
             throw new LedgerImbalanceException("Ledger transaction " + txnId + " needs at least two entries");
         }
@@ -49,7 +55,6 @@ public class LedgerService {
                     + totalDebit + " != credit " + totalCredit);
         }
 
-        Instant now = Instant.now();
         List<LedgerEntry> rows = entries.stream()
                 .map(line -> LedgerEntry.builder()
                         .txnId(txnId)
@@ -57,7 +62,8 @@ public class LedgerService {
                         .account(line.account())
                         .debit(money(line.debit()))
                         .credit(money(line.credit()))
-                        .createdAt(now)
+                        .createdAt(createdAt)
+                        .demo(demo)
                         .build())
                 .toList();
         ledgerEntryRepository.saveAll(rows);

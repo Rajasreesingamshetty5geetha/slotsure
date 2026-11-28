@@ -7,6 +7,9 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: false
+    deserialization:
+      # Other services may add payload fields at any time (CONTRACT V2.5).
+      fail-on-unknown-properties: false
   datasource:
     url: jdbc:mysql://localhost:3307/slot_db?serverTimezone=UTC
     username: slotsure
@@ -40,6 +43,7 @@ slotsure:
     capacity: 10
     first-hour: 8
     last-hour: 22
+    zone: Asia/Kolkata
   hold:
     expiry-seconds: 300
     idempotency-ttl-hours: 24
@@ -50,3 +54,39 @@ slotsure:
     slot-confirmed: slot.confirmed
     slot-confirm-failed: slot.confirm.failed
     slot-released: slot.released
+  demo-data:
+    enabled: true
+    min-bookings-per-day: 40
+    max-bookings-per-day: 80
+  # Bengaluru localities (CONTRACT V2.4); a slot is named after the one nearest its cell's res-8 parent.
+  areas:
+    - name: Koramangala
+      lat: 12.9352
+      lng: 77.6245
+    - name: HSR Layout
+      lat: 12.9116
+      lng: 77.6474
+    - name: Indiranagar
+      lat: 12.9784
+      lng: 77.6408
+    - name: BTM Layout
+      lat: 12.9166
+      lng: 77.6101
+    - name: Jayanagar
+      lat: 12.9250
+      lng: 77.5938
+    - name: Whitefield
+      lat: 12.9698
+      lng: 77.7500
+    - name: Marathahalli
+      lat: 12.9591
+      lng: 77.6974
+    - name: Electronic City
+      lat: 12.8452
+      lng: 77.6602
+    - name: Malleshwaram
+      lat: 13.0035
+      lng: 77.5647
+    - name: Hebbal
+      lat: 13.0358
+      lng: 77.5970

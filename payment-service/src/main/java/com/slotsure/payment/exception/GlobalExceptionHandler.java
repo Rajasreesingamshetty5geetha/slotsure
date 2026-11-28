@@ -1,13 +1,18 @@
 package com.slotsure.payment.exception;
 
 import com.slotsure.payment.dto.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
@@ -22,9 +27,23 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.NOT_FOUND, e.getCode(), e.getMessage());
     }
 
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoResource(NoResourceFoundException e) {
-        return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage());
+    /** An unknown path is a client mistake, not a server error: plain 404, no stack trace. */
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNoEndpoint(HttpServletRequest request) {
+        log.debug("No endpoint for {} {}", request.getMethod(), request.getRequestURI());
+        return error(HttpStatus.NOT_FOUND, "NOT_FOUND", "No endpoint " + request.getMethod() + " " + request.getRequestURI());
+    }
+
+    /** A known path with the wrong HTTP method: 405 with the Allow header, no stack trace. */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e,
+                                                                HttpServletRequest request) {
+        ResponseEntity.BodyBuilder response = ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED);
+        if (e.getSupportedHttpMethods() != null) {
+            response.allow(e.getSupportedHttpMethods().toArray(new HttpMethod[0]));
+        }
+        return response.body(new ErrorResponse("METHOD_NOT_ALLOWED",
+                "Method " + e.getMethod() + " is not allowed on " + request.getRequestURI()));
     }
 
     @ExceptionHandler(LedgerImbalanceException.class)
@@ -33,7 +52,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class, MissingRequestHeaderException.class,
-            IllegalArgumentException.class})
+            MissingServletRequestParameterException.class, IllegalArgumentException.class})
     public ResponseEntity<ErrorResponse> handleBadRequest(Exception e) {
         return error(HttpStatus.BAD_REQUEST, "BAD_REQUEST", e.getMessage());
     }

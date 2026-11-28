@@ -56,6 +56,10 @@ public class Reservation {
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
+    /** True for seeded dummy rows, so they can be wiped. */
+    @Column(nullable = false)
+    private boolean demo;
+
     protected Reservation() {
     }
 

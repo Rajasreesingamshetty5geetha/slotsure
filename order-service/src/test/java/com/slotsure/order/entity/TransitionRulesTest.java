@@ -20,11 +20,34 @@ class TransitionRulesTest {
 
     @Test
     void finalStatusesCannotMove() {
-        for (OrderStatus from : new OrderStatus[]{OrderStatus.CONFIRMED, OrderStatus.FAILED, OrderStatus.CANCELLED}) {
+        for (OrderStatus from : new OrderStatus[]{OrderStatus.DELIVERED, OrderStatus.FAILED, OrderStatus.CANCELLED}) {
+            assertThat(from.isFinal()).isTrue();
             for (OrderStatus to : OrderStatus.values()) {
                 assertThat(from.canMoveTo(to)).as(from + " -> " + to).isFalse();
             }
         }
+    }
+
+    @Test
+    void confirmedOrdersGoOutForDeliveryThenGetDelivered() {
+        assertThat(OrderStatus.CONFIRMED.canMoveTo(OrderStatus.OUT_FOR_DELIVERY)).isTrue();
+        assertThat(OrderStatus.CONFIRMED.canMoveTo(OrderStatus.DELIVERED)).isTrue();
+        assertThat(OrderStatus.CONFIRMED.canMoveTo(OrderStatus.FAILED)).isFalse();
+        assertThat(OrderStatus.CONFIRMED.canMoveTo(OrderStatus.PENDING)).isFalse();
+        assertThat(OrderStatus.OUT_FOR_DELIVERY.canMoveTo(OrderStatus.DELIVERED)).isTrue();
+        assertThat(OrderStatus.OUT_FOR_DELIVERY.canMoveTo(OrderStatus.CONFIRMED)).isFalse();
+        assertThat(OrderStatus.CONFIRMED.isFinal()).isFalse();
+        assertThat(OrderStatus.OUT_FOR_DELIVERY.isFinal()).isFalse();
+    }
+
+    @Test
+    void paymentModesAllowOnlyTheirOwnChoices() {
+        assertThat(PaymentMode.PREPAID.allows(PaymentChoice.PREPAID)).isTrue();
+        assertThat(PaymentMode.PREPAID.allows(PaymentChoice.ONLINE)).isFalse();
+        assertThat(PaymentMode.PREPAID.allows(PaymentChoice.CASH)).isFalse();
+        assertThat(PaymentMode.COD.allows(PaymentChoice.ONLINE)).isTrue();
+        assertThat(PaymentMode.COD.allows(PaymentChoice.CASH)).isTrue();
+        assertThat(PaymentMode.COD.allows(PaymentChoice.PREPAID)).isFalse();
     }
 
     @Test

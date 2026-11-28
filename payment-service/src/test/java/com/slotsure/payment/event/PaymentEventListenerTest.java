@@ -3,6 +3,7 @@ package com.slotsure.payment.event;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slotsure.payment.service.PaymentService;
+import com.slotsure.payment.service.SettlementService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -20,7 +21,8 @@ class PaymentEventListenerTest {
             .findAndRegisterModules()
             .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
     private final PaymentService paymentService = mock(PaymentService.class);
-    private final PaymentEventListener listener = new PaymentEventListener(objectMapper, paymentService);
+    private final SettlementService settlementService = mock(SettlementService.class);
+    private final PaymentEventListener listener = new PaymentEventListener(objectMapper, paymentService, settlementService);
 
     @Test
     void parsesPaymentRequestedEnvelope() throws Exception {

@@ -31,7 +31,8 @@ import static org.mockito.Mockito.verify;
 class PaymentServiceTest {
 
     private static final TopicProperties TOPICS = new TopicProperties(
-            "payment.requested", "payment.captured", "payment.failed", "refund.requested", "refund.completed");
+            "payment.requested", "payment.captured", "payment.failed", "refund.requested", "refund.completed",
+            "escrow.release", "cod.collect");
     private static final BigDecimal AMOUNT = new BigDecimal("250.00");
 
     private final InMemoryStore store = new InMemoryStore();

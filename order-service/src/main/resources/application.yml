@@ -19,6 +19,9 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: false
+    deserialization:
+      # Other services may add payload fields at any time (CONTRACT V2.5).
+      fail-on-unknown-properties: false
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -32,6 +35,7 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 slotsure:
+  zone: Asia/Kolkata
   kafka:
     retry-interval-ms: 1000
     retry-attempts: 2
@@ -45,3 +49,16 @@ slotsure:
     slot-confirm-failed: slot.confirm.failed
     refund-requested: refund.requested
     refund-completed: refund.completed
+    delivery-assigned: delivery.assigned
+    delivery-completed: delivery.completed
+    escrow-release: escrow.release
+    cod-collect: cod.collect
+  demo-data:
+    enabled: true
+    min-bookings-per-day: 40
+    max-bookings-per-day: 80
+    # CONTRACT V2.2 demo users; topped up on startup so each has purchases waiting for a slot.
+    customers:
+      - 6f1c2a10-3b7d-4e2a-9c11-0a1b2c3d4e01
+      - 6f1c2a10-3b7d-4e2a-9c11-0a1b2c3d4e02
+      - 6f1c2a10-3b7d-4e2a-9c11-0a1b2c3d4e03

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Aggregator only: builds the three services together. No parent, no dependencies.
+    <!-- Aggregator only: builds the four services together. No parent, no dependencies.
          Each service is a standalone Spring Boot project with its own parent. -->
     <groupId>com.slotsure</groupId>
     <artifactId>slotsure</artifactId>
@@ -16,5 +16,6 @@
         <module>slot-service</module>
         <module>order-service</module>
         <module>payment-service</module>
+        <module>dispatch-service</module>
     </modules>
 </project>

@@ -33,9 +33,15 @@ public class SagaInstance {
     protected SagaInstance() {
     }
 
+    /** A saga that starts by taking payment (ONLINE). */
     public SagaInstance(String orderId) {
+        this(orderId, SagaStep.PAYMENT_REQUESTED);
+    }
+
+    /** PREPAID and CASH orders take no payment while booking, so they start at SLOT_CONFIRMING. */
+    public SagaInstance(String orderId, SagaStep firstStep) {
         this.orderId = orderId;
-        this.step = SagaStep.PAYMENT_REQUESTED;
+        this.step = firstStep;
         this.updatedAt = Instant.now();
     }
 

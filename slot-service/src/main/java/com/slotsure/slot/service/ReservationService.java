@@ -37,6 +37,7 @@ public class ReservationService {
     private final ProcessedEventRepository processedEventRepository;
     private final SlotCounterService slotCounterService;
     private final EventPublisher eventPublisher;
+    private final AreaResolver areaResolver;
     private final SlotsureProperties properties;
 
     /** Releases one expired hold. Returns true when it was released. */
@@ -142,7 +143,12 @@ public class ReservationService {
     }
 
     private void publishConfirmed(String orderId, Reservation reservation, Slot slot) {
-        SlotConfirmedPayload confirmed = new SlotConfirmedPayload(orderId, reservation.getId(), slot.getId(), slot.getH3Cell());
+        if (slot.getAreaName() == null) {
+            // A slot older than area naming that the startup backfill has not reached; saved with this transaction.
+            slot.setAreaName(areaResolver.resolve(slot.getH3Cell()));
+        }
+        SlotConfirmedPayload confirmed = new SlotConfirmedPayload(orderId, reservation.getId(), slot.getId(),
+                slot.getH3Cell(), slot.getAreaName(), slot.getSlotDate(), slot.getStartHour(), slot.getEndHour());
         afterCommit(() -> eventPublisher.publish(properties.topics().slotConfirmed(), orderId, orderId, confirmed));
     }
 

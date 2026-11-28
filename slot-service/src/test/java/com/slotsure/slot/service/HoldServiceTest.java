@@ -1,5 +1,6 @@
 package com.slotsure.slot.service;
 
+import com.slotsure.slot.TestProperties;
 import com.slotsure.slot.config.SlotsureProperties;
 import com.slotsure.slot.dto.HoldRequest;
 import com.slotsure.slot.dto.HoldResponse;
@@ -47,11 +48,7 @@ class HoldServiceTest {
         StringRedisTemplate redis = mock(StringRedisTemplate.class);
         values = mock(ValueOperations.class);
         when(redis.opsForValue()).thenReturn(values);
-        SlotsureProperties properties = new SlotsureProperties(
-                new SlotsureProperties.SlotSettings(10, 8, 22),
-                new SlotsureProperties.HoldSettings(300, 24, 30000),
-                new SlotsureProperties.Topics("slot.confirm", "slot.release", "slot.confirmed",
-                        "slot.confirm.failed", "slot.released"));
+        SlotsureProperties properties = TestProperties.defaults();
         holdService = new HoldService(reservationRepository, slotCounterService, redis, properties);
     }
 

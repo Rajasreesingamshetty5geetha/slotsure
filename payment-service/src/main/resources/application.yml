@@ -17,8 +17,12 @@ spring:
         jdbc:
           time_zone: UTC
   jackson:
+    serialization:
+      write-dates-as-timestamps: false
     deserialization:
       use-big-decimal-for-floats: true
+      # Other services may add payload fields at any time (CONTRACT V2.5).
+      fail-on-unknown-properties: false
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -33,12 +37,15 @@ spring:
       enable-auto-commit: false
 
 slotsure:
+  zone: Asia/Kolkata
   topics:
     payment-requested: payment.requested
     payment-captured: payment.captured
     payment-failed: payment.failed
     refund-requested: refund.requested
     refund-completed: refund.completed
+    escrow-release: escrow.release
+    cod-collect: cod.collect
   kafka:
     retry-interval-ms: 1000
     retry-attempts: 2
@@ -50,3 +57,8 @@ slotsure:
     b:
       failure-rate: 0.1
       latency-ms: 400
+  demo-data:
+    enabled: true
+    # Must match order-service, so demo payments belong to its demo orders.
+    min-bookings-per-day: 40
+    max-bookings-per-day: 80

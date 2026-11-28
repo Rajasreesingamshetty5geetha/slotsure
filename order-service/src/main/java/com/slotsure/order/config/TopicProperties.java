@@ -16,5 +16,9 @@ public record TopicProperties(
         String slotConfirmed,
         String slotConfirmFailed,
         String refundRequested,
-        String refundCompleted) {
+        String refundCompleted,
+        String deliveryAssigned,
+        String deliveryCompleted,
+        String escrowRelease,
+        String codCollect) {
 }

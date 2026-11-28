@@ -11,5 +11,7 @@ public record TopicProperties(
         String paymentCaptured,
         String paymentFailed,
         String refundRequested,
-        String refundCompleted) {
+        String refundCompleted,
+        String escrowRelease,
+        String codCollect) {
 }

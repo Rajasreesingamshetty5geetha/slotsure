@@ -17,19 +17,25 @@ import java.time.Instant;
 /**
  * Append-only double-entry ledger row. No setters, @Immutable and non-updatable columns:
  * rows are inserted through LedgerService.post and never updated or deleted.
- * Accounts: CUSTOMER:{customerId}, ESCROW, WALLET:{customerId}.
+ * Accounts: CUSTOMER:{customerId}, ESCROW, WALLET:{customerId}, MERCHANT, CASH_COLLECTED.
  */
 @Entity
 @Immutable
 @Table(name = "ledger_entries", indexes = {
         @Index(name = "idx_ledger_entries_order", columnList = "order_id"),
-        @Index(name = "idx_ledger_entries_txn", columnList = "txn_id")
+        @Index(name = "idx_ledger_entries_txn", columnList = "txn_id"),
+        @Index(name = "idx_ledger_entries_account_created", columnList = "account, created_at")
 })
 @Getter
 @Builder
 public class LedgerEntry {
 
     public static final String ESCROW = "ESCROW";
+    /** The seller, paid when an order is delivered. */
+    public static final String MERCHANT = "MERCHANT";
+    /** Cash and UPI that agents took on delivery. */
+    public static final String CASH_COLLECTED = "CASH_COLLECTED";
+    public static final String WALLET_PREFIX = "WALLET:";
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -54,11 +60,15 @@ public class LedgerEntry {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    /** True for seeded dummy rows, so they can be wiped. */
+    @Column(nullable = false, updatable = false)
+    private boolean demo;
+
     protected LedgerEntry() {
     }
 
     private LedgerEntry(String id, String txnId, String orderId, String account,
-                        BigDecimal debit, BigDecimal credit, Instant createdAt) {
+                        BigDecimal debit, BigDecimal credit, Instant createdAt, boolean demo) {
         this.id = id;
         this.txnId = txnId;
         this.orderId = orderId;
@@ -66,6 +76,7 @@ public class LedgerEntry {
         this.debit = debit;
         this.credit = credit;
         this.createdAt = createdAt;
+        this.demo = demo;
     }
 
     public static String customerAccount(String customerId) {
@@ -73,6 +84,6 @@ public class LedgerEntry {
     }
 
     public static String walletAccount(String customerId) {
-        return "WALLET:" + customerId;
+        return WALLET_PREFIX + customerId;
     }
 }

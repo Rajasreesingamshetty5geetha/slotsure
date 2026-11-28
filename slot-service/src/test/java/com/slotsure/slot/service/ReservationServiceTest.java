@@ -1,5 +1,6 @@
 package com.slotsure.slot.service;
 
+import com.slotsure.slot.TestProperties;
 import com.slotsure.slot.config.SlotsureProperties;
 import com.slotsure.slot.entity.Reservation;
 import com.slotsure.slot.entity.ReservationStatus;
@@ -32,12 +33,14 @@ class ReservationServiceTest {
 
     private static final String ORDER_ID = "order-1";
     private static final String EVENT_ID = "event-1";
+    private static final String CELL = "8961892ed5bffff";
 
     private ReservationRepository reservationRepository;
     private SlotRepository slotRepository;
     private ProcessedEventRepository processedEventRepository;
     private SlotCounterService slotCounterService;
     private EventPublisher eventPublisher;
+    private AreaResolver areaResolver;
     private ReservationService reservationService;
     private Slot slot;
 
@@ -48,14 +51,11 @@ class ReservationServiceTest {
         processedEventRepository = mock(ProcessedEventRepository.class);
         slotCounterService = mock(SlotCounterService.class);
         eventPublisher = mock(EventPublisher.class);
-        SlotsureProperties properties = new SlotsureProperties(
-                new SlotsureProperties.SlotSettings(10, 8, 22),
-                new SlotsureProperties.HoldSettings(300, 24, 30000),
-                new SlotsureProperties.Topics("slot.confirm", "slot.release", "slot.confirmed",
-                        "slot.confirm.failed", "slot.released"));
+        SlotsureProperties properties = TestProperties.defaults();
+        areaResolver = mock(AreaResolver.class);
         reservationService = new ReservationService(reservationRepository, slotRepository, processedEventRepository,
-                slotCounterService, eventPublisher, properties);
-        slot = new Slot("8960145b4a3ffff", LocalDate.of(2026, 11, 27), 10, 10);
+                slotCounterService, eventPublisher, areaResolver, properties);
+        slot = new Slot(CELL, "Koramangala", LocalDate.of(2026, 11, 27), 10, 10);
         when(slotRepository.findById(slot.getId())).thenReturn(Optional.of(slot));
     }
 
@@ -76,7 +76,22 @@ class ReservationServiceTest {
         assertThat(slot.getBooked()).isEqualTo(1);
         verify(processedEventRepository).save(any());
         verify(eventPublisher).publish("slot.confirmed", ORDER_ID, ORDER_ID,
-                new SlotConfirmedPayload(ORDER_ID, reservation.getId(), slot.getId(), slot.getH3Cell()));
+                new SlotConfirmedPayload(ORDER_ID, reservation.getId(), slot.getId(), CELL,
+                        "Koramangala", LocalDate.of(2026, 11, 27), 10, 11));
+    }
+
+    @Test
+    void confirmNamesALegacySlotThatHasNoAreaYet() {
+        slot.setAreaName(null);
+        when(areaResolver.resolve(CELL)).thenReturn("HSR Layout");
+        Reservation reservation = hold(Instant.now().plusSeconds(60));
+
+        reservationService.confirm(EVENT_ID, new SlotConfirmPayload(ORDER_ID, reservation.getId()));
+
+        assertThat(slot.getAreaName()).isEqualTo("HSR Layout");
+        verify(eventPublisher).publish("slot.confirmed", ORDER_ID, ORDER_ID,
+                new SlotConfirmedPayload(ORDER_ID, reservation.getId(), slot.getId(), CELL,
+                        "HSR Layout", LocalDate.of(2026, 11, 27), 10, 11));
     }
 
     @Test
